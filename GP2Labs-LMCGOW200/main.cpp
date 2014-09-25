@@ -2,6 +2,8 @@
 #include <iostream>
 
 #include <SDL.h>
+#include <SDL_opengl.h>
+#include <gl\GLU.h>
 
 
 using namespace std;
@@ -14,7 +16,41 @@ SDL_Window *window;
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 bool running = true;
+SDL_GLContext glContext = NULL;
 
+//Initialise opengl
+void InitOpenGL(){
+
+	glContext = SDL_GL_CreateContext(window);
+
+	if (!glContext){
+		cout << "Error Creating OpenGL Context " << SDL_GetError() << endl;
+	}
+
+	//Smooth shading
+	glShadeModel(GL_SMOOTH);
+
+	//Clear the background to black
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+	//Clear the depth buffer to 1.0
+	glClearDepth(1.0f);
+
+	//Enable depth testing
+	glEnable(GL_DEPTH_TEST);
+
+	//The depth test to use
+	glDepthFunc(GL_LEQUAL);
+
+	//Turn on best perspective correction
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+}
+
+//Function to set/reset viewport
+void SetViewport(int width, int height){
+
+}
 
 //Global functions
 void InitWindow(int width, int height, bool fullScreen){
@@ -54,6 +90,18 @@ int main(int argc, char* arg[]){
 
 	SDL_Event event;
 
+	while (running){
+
+		while (SDL_PollEvent(&event)){
+
+			if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE){
+				//set our boolean which controls the game loop to false
+				running = false; 
+			}
+
+		}
+
+	}
 
 	CleanUp();
 
